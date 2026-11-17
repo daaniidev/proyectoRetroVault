@@ -1,0 +1,19 @@
+# NetBeans
+build/
+dist/
+nbproject/private/
+nbbuild/
+nbdist/
+nb-configuration.xml
+
+# Compilados
+*.class
+
+# Base de datos SQLite generada en tiempo de ejecucion
+*.db
+
+# Librerias externas (sqlite-jdbc y flatlaf) - no se suben al repo
+libs/
+
+# Sistema
+.DS_Store
