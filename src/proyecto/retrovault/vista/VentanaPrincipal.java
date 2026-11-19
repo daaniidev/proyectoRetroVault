@@ -4,19 +4,102 @@
  */
 package proyecto.retrovault.vista;
 
+import proyecto.retrovault.datos.JuegoDAO;
+import proyecto.retrovault.modelo.Juego;
+
 /**
  *
  * @author daani_.30
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
+
+    private final JuegoDAO dao = new JuegoDAO();
+    private JuegosTableModel modeloTabla;
 
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
         initComponents();
+        configurarTabla();
+        configurarPopup();
+        cargarDatos();
+        setLocationRelativeTo(null);
+    }
+
+    private void configurarTabla() {
+        modeloTabla = new JuegosTableModel(new java.util.ArrayList<>());
+        tablaJuegos.setModel(modeloTabla);
+
+        ConsolaColorRenderer renderer = new ConsolaColorRenderer();
+        for (int i = 0; i < tablaJuegos.getColumnCount(); i++) {
+            tablaJuegos.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+
+        tablaJuegos.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tablaJuegos.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tablaJuegos.getColumnModel().getColumn(2).setPreferredWidth(110);
+        tablaJuegos.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tablaJuegos.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tablaJuegos.getColumnModel().getColumn(5).setPreferredWidth(110);
+        tablaJuegos.getColumnModel().getColumn(6).setPreferredWidth(100);
+
+        tablaJuegos.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) editarSeleccionado();
+            }
+        });
+    }
+
+    private void configurarPopup() {
+        tablaJuegos.setComponentPopupMenu(popupTabla);
+        tablaJuegos.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                int fila = tablaJuegos.rowAtPoint(e.getPoint());
+                if (fila >= 0) tablaJuegos.setRowSelectionInterval(fila, fila);
+            }
+        });
+    }
+
+    private void cargarDatos() {
+        modeloTabla.setJuegos(dao.obtenerTodos());
+        actualizarEstadisticas();
+    }
+
+    private void actualizarEstadisticas() {
+        int total = dao.contarTotal();
+        int comp = dao.contarCompletados();
+        double med = dao.puntuacionMedia();
+        lblTotal.setText(" Total: " + total);
+        lblCompletados.setText(" | Completados: " + comp);
+        lblMedia.setText(" | Media: " + (total == 0 ? "-" : String.format("%.1f *", med)));
+    }
+
+    private void editarSeleccionado() {
+        int fila = tablaJuegos.getSelectedRow();
+        if (fila < 0) return;
+        Juego j = modeloTabla.getJuego(fila);
+        DialogoJuego dlg = new DialogoJuego(this, j);
+        dlg.setVisible(true);
+        if (dlg.isGuardado()) { dao.actualizar(dlg.getJuego()); cargarDatos(); }
+    }
+
+    private void eliminarSeleccionado() {
+        int fila = tablaJuegos.getSelectedRow();
+        if (fila < 0) return;
+        Juego j = modeloTabla.getJuego(fila);
+        int r = javax.swing.JOptionPane.showConfirmDialog(this,
+            "¿Eliminar \"" + j.getTitulo() + "\" de tu biblioteca?",
+            "Confirmar eliminacion", javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+        if (r == javax.swing.JOptionPane.YES_OPTION) {
+            dao.eliminar(j.getId());
+            cargarDatos();
+        }
     }
 
     /**
@@ -112,13 +195,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel1.setText("Consola:");
         panelFiltros.add(jLabel1);
 
-        cmbConsola.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbConsola.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todas", "NES", "SNES", "Mega Drive", "Game Boy", "PlayStation", "Nintendo 64", "Game Gear", "Arcade" }));
         panelFiltros.add(cmbConsola);
 
         jLabel2.setText("Estado:");
         panelFiltros.add(jLabel2);
 
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendiente", "Jugando", "Completado", "Abandonado" }));
         panelFiltros.add(cmbEstado);
 
         btnFiltrar.setText("Filtrar");
@@ -170,31 +253,41 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
-        // TODO add your handling code here:
+        String cons = (String) cmbConsola.getSelectedItem();
+        String est = (String) cmbEstado.getSelectedItem();
+        java.util.List<Juego> lista;
+        if (!"Todas".equals(cons)) lista = dao.obtenerPorConsola(cons);
+        else if (!"Todos".equals(est)) lista = dao.obtenerPorEstado(est);
+        else lista = dao.obtenerTodos();
+        modeloTabla.setJuegos(lista);
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
+        cmbConsola.setSelectedIndex(0);
+        cmbEstado.setSelectedIndex(0);
+        cargarDatos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirActionPerformed
-        // TODO add your handling code here:
+        DialogoJuego dlg = new DialogoJuego(this, null);
+        dlg.setVisible(true);
+        if (dlg.isGuardado()) { dao.insertar(dlg.getJuego()); cargarDatos(); }
     }//GEN-LAST:event_btnAnadirActionPerformed
 
     private void mniSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSalirActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_mniSalirActionPerformed
 
     private void mniEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEditarActionPerformed
-        // TODO add your handling code here:
+        editarSeleccionado();
     }//GEN-LAST:event_mniEditarActionPerformed
 
     private void mniEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEliminarActionPerformed
-        // TODO add your handling code here:
+        eliminarSeleccionado();
     }//GEN-LAST:event_mniEliminarActionPerformed
 
     private void mniActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniActualizarActionPerformed
-        // TODO add your handling code here:
+        cargarDatos();
     }//GEN-LAST:event_mniActualizarActionPerformed
 
     /**
