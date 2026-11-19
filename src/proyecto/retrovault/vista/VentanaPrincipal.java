@@ -30,12 +30,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        mniSalir = new javax.swing.JMenuItem();
+        mnJuegos = new javax.swing.JMenu();
+        mniAnadir = new javax.swing.JMenuItem();
+        mniEditar = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mniEliminar = new javax.swing.JMenuItem();
+        mnVista = new javax.swing.JMenu();
+        mniActualizar = new javax.swing.JMenuItem();
+        popupTabla = new javax.swing.JPopupMenu();
+        popAnadir = new javax.swing.JMenuItem();
+        popEditar = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        popEliminar = new javax.swing.JMenuItem();
         panelFiltros = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         cmbConsola = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cmbEstado = new javax.swing.JComboBox<>();
         btnFiltrar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnAnadir = new javax.swing.JButton();
@@ -46,11 +58,50 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblCompletados = new javax.swing.JLabel();
         lblMedia = new javax.swing.JLabel();
 
+        mniSalir.setText("Salir");
+        mniSalir.addActionListener(this::mniSalirActionPerformed);
+        jMenu1.add(mniSalir);
+
         jMenu1.setText("Archivo");
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        mnJuegos.setText("Juegos");
+
+        mniAnadir.setText("Añadir juego…");
+        mniAnadir.addActionListener(this::btnAnadirActionPerformed);
+        mnJuegos.add(mniAnadir);
+
+        mniEditar.setText("Editar juego…");
+        mniEditar.addActionListener(this::mniEditarActionPerformed);
+        mnJuegos.add(mniEditar);
+        mnJuegos.add(jSeparator1);
+
+        mniEliminar.setText("Eliminar juego");
+        mniEliminar.addActionListener(this::mniEliminarActionPerformed);
+        mnJuegos.add(mniEliminar);
+
+        jMenuBar1.add(mnJuegos);
+
+        mnVista.setText("Vista");
+
+        mniActualizar.setText("Actualizar");
+        mniActualizar.addActionListener(this::mniActualizarActionPerformed);
+        mnVista.add(mniActualizar);
+
+        jMenuBar1.add(mnVista);
+
+        popAnadir.setText("Añadir juego…");
+        popAnadir.addActionListener(this::btnAnadirActionPerformed);
+        popupTabla.add(popAnadir);
+
+        popEditar.setText("Editar juego…");
+        popEditar.addActionListener(this::mniEditarActionPerformed);
+        popupTabla.add(popEditar);
+        popupTabla.add(jSeparator2);
+
+        popEliminar.setText("Eliminar juego");
+        popEliminar.addActionListener(this::mniEliminarActionPerformed);
+        popupTabla.add(popEliminar);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Biblioteca de VideoJuegos Retro");
@@ -67,18 +118,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel2.setText("Estado:");
         panelFiltros.add(jLabel2);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-        panelFiltros.add(jComboBox1);
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        panelFiltros.add(cmbEstado);
 
         btnFiltrar.setText("Filtrar");
         btnFiltrar.addActionListener(this::btnFiltrarActionPerformed);
         panelFiltros.add(btnFiltrar);
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
         panelFiltros.add(btnLimpiar);
 
         btnAnadir.setText("+ Añadir");
+        btnAnadir.addActionListener(this::btnAnadirActionPerformed);
         panelFiltros.add(btnAnadir);
 
         getContentPane().add(panelFiltros, java.awt.BorderLayout.PAGE_START);
@@ -117,13 +169,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAnadirActionPerformed
+
+    private void mniSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniSalirActionPerformed
+
+    private void mniEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniEditarActionPerformed
+
+    private void mniEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEliminarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniEliminarActionPerformed
+
+    private void mniActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniActualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniActualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,17 +227,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JComboBox<String> cmbConsola;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel lblCompletados;
     private javax.swing.JLabel lblMedia;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JMenu mnJuegos;
+    private javax.swing.JMenu mnVista;
+    private javax.swing.JMenuItem mniActualizar;
+    private javax.swing.JMenuItem mniAnadir;
+    private javax.swing.JMenuItem mniEditar;
+    private javax.swing.JMenuItem mniEliminar;
+    private javax.swing.JMenuItem mniSalir;
     private javax.swing.JPanel panelEstadisticas;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JMenuItem popAnadir;
+    private javax.swing.JMenuItem popEditar;
+    private javax.swing.JMenuItem popEliminar;
+    private javax.swing.JPopupMenu popupTabla;
     private javax.swing.JScrollPane scrollTabla;
     private javax.swing.JTable tablaJuegos;
     // End of variables declaration//GEN-END:variables
